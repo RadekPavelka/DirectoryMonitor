@@ -1,0 +1,163 @@
+﻿@model DirectoryMonitor.Models.AnalyzeViewModel
+@{
+    ViewData["Title"] = "Directory Monitor";
+}
+
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <h2 class="mb-4">
+                <i class="bi bi-folder2-open"></i> Directory Monitor
+            </h2>
+
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <form asp-action="Analyze" method="post">
+                        <div class="mb-3">
+                            <label asp-for="DirectoryPath" class="form-label fw-bold">Cesta k adresáři:</label>
+                            <input asp-for="DirectoryPath" class="form-control form-control-lg" placeholder="např. C:\Temp" />
+                            <span asp-validation-for="DirectoryPath" class="text-danger"></span>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger" role="alert"></div>
+
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            <i class="bi bi-search"></i> Analyzovat
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            @if (ViewBag.FirstRun == true)
+            {
+                <div class="alert alert-success" role="alert">
+                    <h5 class="alert-heading"><i class="bi bi-check-circle"></i> První spuštění</h5>
+                    <p class="mb-0">Snapshot byl úspěšně uložen. Při dalším spuštění budou detekovány změny.</p>
+                </div>
+            }
+
+            @if (Model.Result != null)
+            {
+                var hasChanges = Model.Result.NewFiles.Any() ||
+                                 Model.Result.ChangedFiles.Any() ||
+                                 Model.Result.DeletedFiles.Any() ||
+                                 Model.Result.DeletedDirectories.Any();
+
+                @if (!hasChanges)
+                {
+                    <div class="alert alert-info" role="alert">
+                        <i class="bi bi-info-circle"></i> Nebyly detekovány žádné změny od posledního spuštění.
+                    </div>
+                }
+                else
+                {
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-success text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-file-plus"></i> Nové soubory
+                                <span class="badge bg-light text-success">@Model.Result.NewFiles.Count</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Result.NewFiles.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var file in Model.Result.NewFiles)
+                                    {
+                                        <li class="list-group-item">
+                                            @file
+                                            <span class="badge bg-success float-end">verze @Model.Result.FileVersions[file]</span>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">Žádné nové soubory.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-warning text-dark">
+                            <h5 class="mb-0">
+                                <i class="bi bi-pencil"></i> Změněné soubory
+                                <span class="badge bg-light text-dark">@Model.Result.ChangedFiles.Count</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Result.ChangedFiles.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var file in Model.Result.ChangedFiles)
+                                    {
+                                        <li class="list-group-item">
+                                            @file
+                                            <span class="badge bg-warning text-dark float-end">verze @Model.Result.FileVersions[file]</span>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">Žádné změněné soubory.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-danger text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-file-minus"></i> Smazané soubory
+                                <span class="badge bg-light text-danger">@Model.Result.DeletedFiles.Count</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Result.DeletedFiles.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var file in Model.Result.DeletedFiles)
+                                    {
+                                        <li class="list-group-item text-muted">
+                                            <del>@file</del>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">Žádné smazané soubory.</p>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="card shadow-sm mb-3">
+                        <div class="card-header bg-secondary text-white">
+                            <h5 class="mb-0">
+                                <i class="bi bi-folder-minus"></i> Smazané adresáře
+                                <span class="badge bg-light text-secondary">@Model.Result.DeletedDirectories.Count</span>
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            @if (Model.Result.DeletedDirectories.Any())
+                            {
+                                <ul class="list-group list-group-flush">
+                                    @foreach (var dir in Model.Result.DeletedDirectories)
+                                    {
+                                        <li class="list-group-item text-muted">
+                                            <del>@dir</del>
+                                        </li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <p class="text-muted mb-0">Žádné smazané adresáře.</p>
+                            }
+                        </div>
+                    </div>
+                }
+            }
+        </div>
+    </div>
+</div>

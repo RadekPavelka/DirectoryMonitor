@@ -1,0 +1,4 @@
+<Solution>
+  <Project Path="DirectoryMonitor.Tests/DirectoryMonitor.Tests.csproj" />
+  <Project Path="DirectoryMonitor/DirectoryMonitor.csproj" />
+</Solution>

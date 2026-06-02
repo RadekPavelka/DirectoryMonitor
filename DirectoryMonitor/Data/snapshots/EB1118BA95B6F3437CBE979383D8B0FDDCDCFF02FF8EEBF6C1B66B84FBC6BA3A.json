@@ -1,0 +1,21 @@
+{
+  "RootPath": "C:\\Temp\\TestFolder",
+  "Files": [
+    {
+      "RelativePath": "afasdsad.txt",
+      "Hash": "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855",
+      "Version": 1
+    },
+    {
+      "RelativePath": "ewe.txt",
+      "Hash": "9F46469535DB899468E8BEE370B6C83BFF44F953BE0B1A6C74BC1E30BF0571DB",
+      "Version": 2
+    },
+    {
+      "RelativePath": "pokus.txt",
+      "Hash": "68ED3F0CA7B47AC5E3856A6F0B741A227003DBD3FEA313102C6394A8F369AB5E",
+      "Version": 3
+    }
+  ],
+  "Directories": []
+}
